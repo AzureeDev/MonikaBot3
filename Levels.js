@@ -17,12 +17,24 @@ exports.TrackEXP = function(instigator, clbk, clbk_arg) {
 	Init(instigator, clbk, clbk_arg);
 }
 
+exports.GetUserData = function() {
+	return GetUserData();
+}
+
+exports.GetLevelByExp = function(exp) {
+	return ReturnLevel(exp);
+}
+
 exports.LB = function() {
 	return Leaderboard();
 }
 
 exports.LBT = function() {
 	return LeaderboardTest();
+}
+
+exports.PerformResetOnInfamy = function() {
+	PerformResetOnInfamy();
 }
 
 var instigator_username = "";
@@ -40,9 +52,6 @@ function Init(instigator, clbk, clbk_arg) {
 
 	if (clbk == "GiveEXP") {
 		GiveEXP(clbk_arg);
-	}
-
-	if (clbk == "RemoveEXP") {
 	}
 }
 
@@ -114,7 +123,7 @@ function numberWithCommas(x) {
 }
 
 function ReturnLevel(xp) {
-	var return_level = 0;
+	var return_level = 100;
 	var level_found = false;
 	var total = 0; 
 	var level;
@@ -220,4 +229,13 @@ function TableExp() {
 	}
 
 	return stringTable.create(xp_data);
+}
+
+function PerformResetOnInfamy() {
+	var UserData = GetUserData();
+
+	UserData.experience = 0;
+	UserData.infamy += 1;
+
+	Save(UserData);
 }

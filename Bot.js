@@ -33,11 +33,10 @@ client.on('message', message => {
 		var lb = Level.LBT();
 		var lbchannel = guild.channels.get("402720348937781248");
 
-		Level.TrackEXP(instigator, "GiveEXP", message);
+		var Infamy_M_Role = "401390152552939522"
+		var Infamy_Levels = ["0", "408604999153876992", "408546239710232576", "408546390881599509", "408546428433203200", "408546448993681408"];
 
-		lbchannel.fetchMessage(msg_lb_target)
-		//.then(message => message.edit("Changes are going to be made to the EXP system. For now, it's disabled."));
-		.then(message => message.edit(lb));
+		Level.TrackEXP(instigator, "GiveEXP", message);
 
 		if (command == "!monika" || command == "!justmonika") {
 			message.reply("<3");
@@ -54,6 +53,35 @@ client.on('message', message => {
 		if (command == "!startgiveaway") {
 			OnGiveawayStarts(instigator, channel);
 		}
+
+		if (command == "!reset") {
+			// // //
+		}
+
+		if (command == "!infamy") {
+			var UserData = Level.GetUserData();
+			var CurrentInfamy = UserData.infamy;
+			var convert_level = Level.GetLevelByExp(UserData.experience);
+			var CurrentLevel = convert_level;
+			var NewInfamy = CurrentInfamy + 1;
+
+			if (CurrentLevel == 100 && CurrentInfamy < 5) {
+				Level.PerformResetOnInfamy();
+
+				if (CurrentInfamy == 0) { guild_member.addRole(Infamy_M_Role); }
+				if (CurrentInfamy > 0) { guild_member.removeRole(Infamy_Levels[CurrentInfamy]); } // Clear previous level role
+
+				guild_member.addRole(Infamy_Levels[NewInfamy]);
+				message.reply("you are now infamous level " + NewInfamy + "! ♠");
+
+			} else {
+				message.reply("you're either not level 100, or you are at the maximum infamy level");
+			}
+		}
+
+		lbchannel.fetchMessage(msg_lb_target)
+		//.then(message => message.edit("Changes are going to be made to the EXP system. For now, it's disabled."));
+		.then(message => message.edit(lb));
 	}
 });
 
